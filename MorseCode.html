@@ -29,8 +29,10 @@
 </head>
 <body>
   <h1>Morse Code Translator</h1>
-  <textarea id="inputText" rows="4" placeholder="Type your message here..."></textarea>
-  <button onclick="translateToMorse()">Translate to Morse Code</button>
+
+  <textarea id="inputText" rows="4" placeholder="Type your message or Morse code here..."></textarea>
+  <button onclick="translateToMorse()">Text ➡️ Morse</button>
+  <button onclick="translateToText()">Morse ➡️ Text</button>
 
   <div id="output"></div>
 
@@ -49,8 +51,12 @@
       '3': '...--', '4': '....-', '5': '.....',
       '6': '-....', '7': '--...', '8': '---..',
       '9': '----.',
-      ' ': ' / '
+      ' ': '/'
     };
+
+    const reverseMorseMap = Object.fromEntries(
+      Object.entries(morseCodeMap).map(([key, value]) => [value, key])
+    );
 
     function translateToMorse() {
       const input = document.getElementById("inputText").value.toUpperCase();
@@ -62,6 +68,26 @@
         } else {
           output += "? ";
         }
+      }
+
+      document.getElementById("output").innerText = output.trim();
+    }
+
+    function translateToText() {
+      const input = document.getElementById("inputText").value.trim();
+      const morseWords = input.split(" / ");
+      let output = "";
+
+      for (let word of morseWords) {
+        const letters = word.trim().split(" ");
+        for (let letter of letters) {
+          if (reverseMorseMap[letter]) {
+            output += reverseMorseMap[letter];
+          } else {
+            output += "?";
+          }
+        }
+        output += " ";
       }
 
       document.getElementById("output").innerText = output.trim();
